@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./asste file/image file/xpert solution academmy f-01.png">
+    <title>Student Management System</title>
+    <link rel="icon" href="./logo png.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff;
+            color: #5D4037; /* Brown color for text */
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(93, 64, 55, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #795548; /* Darker brown for logo */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(121, 85, 72, 0.1);
+            color: #5D4037;
+        }
+
+        .nav-item.active {
+            color: #5D4037;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #795548;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* Date Display */
+        .date-display {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+        }
+
+        .current-date {
+            font-size: 1.5rem;
+            color: #5D4037;
+            font-weight: bold;
+        }
+
+        .current-time {
+            font-size: 1rem;
+            color: #8D6E63;
+            margin-top: 0.5rem;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Section Styles */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(121, 85, 72, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(121, 85, 72, 0.2);
+        }
+
+        .stat-card:hover::before {
+            top: -30%;
+            right: -30%;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #795548;
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #8D6E63;
+            font-size: 0.9rem;
+        }
+
+        /* Recent Activity */
+        .activity-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+        }
+
+        .activity-header {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #5D4037;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .activity-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(93, 64, 55, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background-color: rgba(121, 85, 72, 0.05);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #795548 0%, #5D4037 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .activity-time {
+            color: #8D6E63;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .activity-date {
+            color: #5D4037;
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+        }
+
+        /* Student Management */
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .student-card {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(121, 85, 72, 0.2);
+        }
+
+        .student-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .student-card-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #795548 0%, #5D4037 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .student-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-present {
+            background-color: rgba(121, 85, 72, 0.2);
+            color: #5D4037;
+        }
+
+        .status-absent {
+            background-color: rgba(183, 28, 28, 0.2);
+            color: #D32F2F;
+        }
+
+        .student-details {
+            margin-bottom: 1rem;
+        }
+
+        .student-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .student-id {
+            color: #8D6E63;
+            font-size: 0.9rem;
+        }
+
+        .student-join-date {
+            color: #5D4037;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: #795548;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #5D4037;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(121, 85, 72, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #795548;
+            border: 1px solid #795548;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(121, 85, 72, 0.1);
+        }
+
+        /* Fingerprint Registration */
+        .fingerprint-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .fingerprint-scanner {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            background: radial-gradient(circle, rgba(121, 85, 72, 0.1) 0%, transparent 70%);
+            border: 2px solid #795548;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(121, 85, 72, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(121, 85, 72, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(121, 85, 72, 0); }
+        }
+
+        .fingerprint-icon {
+            font-size: 4rem;
+            color: #795548;
+        }
+
+        .scanning {
+            animation: scan 1s ease-in-out;
+        }
+
+        @keyframes scan {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #5D4037;
+            font-weight: bold;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #f5f5f5;
+            border: 1px solid rgba(121, 85, 72, 0.3);
+            border-radius: 5px;
+            color: #5D4037;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #795548;
+            box-shadow: 0 0 10px rgba(121, 85, 72, 0.2);
+        }
+
+        /* Date Picker */
+        .date-picker-container {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .date-input {
+            padding: 0.8rem;
+            background-color: #f5f5f5;
+            border: 1px solid rgba(121, 85, 72, 0.3);
+            border-radius: 5px;
+            color: #5D4037;
+            font-size: 1rem;
+        }
+
+        /* Attendance Records */
+        .attendance-records {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            margin-top: 2rem;
+        }
+
+        .attendance-header {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #5D4037;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .attendance-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(93, 64, 55, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .attendance-item:hover {
+            background-color: rgba(121, 85, 72, 0.05);
+        }
+
+        .attendance-item:last-child {
+            border-bottom: none;
+        }
+
+        .attendance-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .attendance-time {
+            text-align: right;
+        }
+
+        .attendance-time-label {
+            color: #5D4037;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .attendance-date {
+            color: #8D6E63;
+            font-size: 0.8rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(93, 64, 55, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            color: #5D4037;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #8D6E63;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #D32F2F;
+        }
+
+        /* Success Message */
+        .success-message {
+            background-color: rgba(121, 85, 72, 0.1);
+            border: 1px solid #795548;
+            color: #5D4037;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Fees Section */
+        .fees-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .fees-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .fees-title {
+            font-size: 1.3rem;
+            color: #5D4037;
+        }
+
+        .fees-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .fees-table th, .fees-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(121, 85, 72, 0.2);
+        }
+
+        .fees-table th {
+            background-color: rgba(121, 85, 72, 0.1);
+            color: #5D4037;
+            font-weight: bold;
+        }
+
+        .fees-table tr:hover {
+            background-color: rgba(121, 85, 72, 0.05);
+        }
+
+        .status-paid {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #388E3C;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .status-unpaid {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #D32F2F;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Admission Section */
+        .admission-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .admission-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Timetable Section */
+        .timetable-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .timetable-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .timetable-table th, .timetable-table td {
+            padding: 0.8rem;
+            text-align: center;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+        }
+
+        .timetable-table th {
+            background-color: rgba(121, 85, 72, 0.1);
+            color: #5D4037;
+            font-weight: bold;
+        }
+
+        .timetable-table tr:nth-child(even) {
+            background-color: rgba(121, 85, 72, 0.05);
+        }
+
+        .timetable-table tr:hover {
+            background-color: rgba(121, 85, 72, 0.1);
+        }
+
+        /* Course Section */
+        .course-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(121, 85, 72, 0.2);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .course-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #5D4037;
+        }
+
+        .course-code {
+            color: #8D6E63;
+            font-size: 0.9rem;
+        }
+
+        .course-details {
+            margin-bottom: 1rem;
+        }
+
+        .course-instructor {
+            margin-bottom: 0.5rem;
+        }
+
+        .course-duration {
+            margin-bottom: 0.5rem;
+        }
+
+        .course-description {
+            color: #8D6E63;
+            font-size: 0.9rem;
+        }
+
+        /* All Section */
+        .all-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(121, 85, 72, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .all-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(121, 85, 72, 0.2);
+        }
+
+        .all-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .all-tab:hover {
+            color: #5D4037;
+        }
+
+        .all-tab.active {
+            color: #5D4037;
+            border-bottom-color: #795548;
+        }
+
+        .all-content {
+            display: none;
+        }
+
+        .all-content.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 0.5rem;
+            }
+
+            .nav-item {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .student-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-container {
+                padding: 0 1rem;
+            }
+
+            .date-picker-container {
+                flex-direction: column;
+            }
+            
+            .fees-table {
+                font-size: 0.8rem;
+            }
+            
+            .timetable-table {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #795548;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5D4037;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="./logo png.png" style="width: 120px;" height="100px" alt="">
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-section="dashboard">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </li>
+                    <li class="nav-item" data-section="students">
+                        <i class="fas fa-users"></i> Students
+                    </li>
+                    <li class="nav-item" data-section="fingerprint">
+                        <i class="fas fa-fingerprint"></i> Register
+                    </li>
+                    <li class="nav-item" data-section="attendance">
+                        <i class="fas fa-calendar-check"></i> Attendance
+                    </li>
+                    <li class="nav-item" data-section="fees">
+                        <i class="fas fa-dollar-sign"></i> Fees
+                    </li>
+                    <li class="nav-item" data-section="admission">
+                        <i class="fas fa-user-plus"></i> Admission
+                    </li>
+                    <li class="nav-item" data-section="timetable">
+                        <i class="fas fa-clock"></i> Timetable
+                    </li>
+                    <li class="nav-item" data-section="course">
+                        <i class="fas fa-book"></i> Course
+                    </li>
+                    <li class="nav-item" data-section="all">
+                        <i class="fas fa-th"></i> All
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="date-display">
+                <div class="current-date" id="currentDate"></div>
+                <div class="current-time" id="currentTime"></div>
+            </div>
+            
+            <h2 style="margin-bottom: 2rem; color: #5D4037;">
+                <i class="fas fa-tachometer-alt"></i> Dashboard Overview
+            </h2>
+            
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value" id="totalStudents">0</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-value" id="presentToday">0</div>
+                    <div class="stat-label">Present Today</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-times"></i>
+                    </div>
+                    <div class="stat-value" id="absentToday">0</div>
+                    <div class="stat-label">Absent Today</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-value" id="attendanceRate">0%</div>
+                    <div class="stat-label">Attendance Rate</div>
+                </div>
+            </div>
+
+            <div class="activity-container">
+                <h3 class="activity-header">
+                    <i class="fas fa-clock"></i> Recent Activity
+                </h3>
+                <div class="activity-list" id="recentActivity">
+                    <!-- Activity items will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Students Section -->
+        <section id="students" class="section">
+            <h2 style="margin-bottom: 2rem; color: #5D4037;">
+                <i class="fas fa-users"></i> Student Management
+            </h2>
+            
+            <div style="margin-bottom: 2rem;">
+                <button class="btn btn-primary" onclick="showAddStudentModal()">
+                    <i class="fas fa-plus"></i> Add New Student
+                </button>
+                <button class="btn btn-secondary" onclick="exportToExcel('students')">
+                    <i class="fas fa-file-excel"></i> Export to Excel
+                </button>
+            </div>
+
+            <div class="student-grid" id="studentGrid">
+                <!-- Student cards will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Fingerprint Registration Section -->
+        <section id="fingerprint" class="section">
+            <h2 style="margin-bottom: 2rem; color: #5D4037; text-align: center;">
+                <i class="fas fa-fingerprint"></i> Fingerprint Registration
+            </h2>
+            
+            <div class="fingerprint-container">
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i> Fingerprint registered successfully!
+                </div>
+                
+                <form id="fingerprintForm">
+                    <div class="form-group">
+                        <label class="form-label" for="studentName">Student Name</label>
+                        <input type="text" id="studentName" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="studentId">Student ID</label>
+                        <input type="text" id="studentId" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="studentClass">Class</label>
+                        <input type="text" id="studentClass" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="joinDate">Join Date</label>
+                        <input type="date" id="joinDate" class="form-input" required>
+                    </div>
+                    
+                    <div class="fingerprint-scanner" id="fingerprintScanner">
+                        <i class="fas fa-fingerprint fingerprint-icon"></i>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-fingerprint"></i> Register Fingerprint
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Attendance Section -->
+        <section id="attendance" class="section">
+            <h2 style="margin-bottom: 2rem; color: #5D4037;">
+                <i class="fas fa-calendar-check"></i> Mark Attendance
+            </h2>
+            
+            <div class="date-picker-container">
+                <label class="form-label" for="attendanceDate">Select Date:</label>
+                <input type="date" id="attendanceDate" class="date-input">
+                <button class="btn btn-primary" onclick="viewAttendanceByDate()">
+                    <i class="fas fa-search"></i> View Attendance
+                </button>
+                <button class="btn btn-secondary" onclick="exportToExcel('attendance')">
+                    <i class="fas fa-file-excel"></i> Export to Excel
+                </button>
+            </div>
+            
+            <div class="fingerprint-container">
+                <div class="fingerprint-scanner" id="attendanceScanner">
+                    <i class="fas fa-fingerprint fingerprint-icon"></i>
+                </div>
+                
+                <p style="text-align: center; margin-top: 1rem; color: #8D6E63;">
+                    Place your finger on the scanner to mark attendance
+                </p>
+                
+                <div id="attendanceResult" style="text-align: center; margin-top: 2rem; display: none;">
+                    <!-- Attendance result will be shown here -->
+                </div>
+            </div>
+            
+            <div class="attendance-records" id="attendanceRecords" style="display: none;">
+                <h3 class="attendance-header">
+                    <i class="fas fa-list"></i> Attendance Records
+                </h3>
+                <div class="attendance-list" id="attendanceList">
+                    <!-- Attendance records will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Fees Section -->
+        <section id="fees" class="section">
+            <h2 style="margin-bottom: 2rem; color: #5D4037;">
+                <i class="fas fa-dollar-sign"></i> Fee Management
+            </h2>
+            
+            <div class="fees-container">
+                <div class="fees-header">
+                    <h3 class="fees-title">Fee Records</h3>
+                    <div>
+                        <button class="btn btn-primary" onclick="showAddFeeModal()">
+                            <i class="fas fa-plus"></i> Add Fee Record
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportToExcel('fees')">
+                            <i class="fas fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                </div>
+                
+                <table class="fees-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Fee Type</th>
+                            <th>Amount</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feesTableBody">
+                        <!-- Fee records will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Admission Section -->
+        <section id="admission" class="section">
+            <h2 style="margin-bottom: 2rem; color: #5D4037;">
+                <i class="fas fa-user-plus"></i> Admission Management
+            </h2>
+            
+            <div class="admission-container">
+                <div class="fees-header">
+                    <h3 class="fees-title">Admission Form</h3>
+                    <button class="btn btn-secondary" onclick="exportToExcel('admission')">
+                        <i class="fas fa-file-excel"></i> Export to Excel
+                    </button>
+                </div>
+                
+                <form id="admissionForm" class="admission-form">
+                    <div class="form-group">
+                        <label class="form-label" for="applicantName">Applicant Name</label>
+                        <input type="text" id="applicantName" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="applicantEmail">Email</label>
+                        <input type="email" id="applicantEmail" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="applicantPhone">Phone</label>
+                        <input type="tel" id="applicantPhone" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="applicantCourse">Applying Course</label>
+                        <select id="applicantCourse" class="form-input" required>
+                            <option value="">Select Course</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Business Administration">Business Administration</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Medicine">Medicine</option>
+                            <option value="Arts">Arts</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="applicantDate">Application Date</label>
+                        <input type="date" id="applicantDate" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="applicantMessage">Additional Information</label>
+                        <textarea id="applicantMessage" class="form-input" rows="4"></textarea>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Submit Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Timetable Section -->
+        <section id="timetable" class="section">
+            <h2 style="margin-bottom: 2rem; color: #5D4037;">
+                <i class="fas fa-clock"></i> Class Timetable
+            </h2>
+            
+            <div class="timetable-container">
+                <div class="fees-header">
+                    <h3 class="fees-title">Weekly Schedule</h3>
+                    <button class="btn btn-secondary" onclick="exportToExcel('timetable')">
+                        <i class="fas fa-file-excel"></i> Export to Excel
+                    </button>
+                </div>
+                
+                <table class="timetable-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>9:00 - 10:00</td>
+                            <td>Mathematics</td>
+                            <td>Physics</td>
+                            <td>Chemistry</td>
+                            <td>Mathematics</td>
+                            <td>Computer Science</td>
+                            <td>English</td>
+                        </tr>
+                        <tr>
+                            <td>10:00 - 11:00</td>
+                            <td>English</td>
+                            <td>Mathematics</td>
+                            <td>Physics</td>
+                            <td>Chemistry</td>
+                            <td>Mathematics</td>
+                            <td>Physical Education</td>
+                        </tr>
+                        <tr>
+                            <td>11:00 - 12:00</td>
+                            <td>Computer Science</td>
+                            <td>English</td>
+                            <td>Mathematics</td>
+                            <td>Physics</td>
+                            <td>Chemistry</td>
+                            <td>Library</td>
+                        </tr>
+                        <tr>
+                            <td>12:00 - 1:00</td>
+                            <td colspan="6" style="text-align: center; font-weight: bold;">Lunch Break</td>
+                        </tr>
+                        <tr>
+                            <td>1:00 - 2:00</td>
+                            <td>Chemistry</td>
+                            <td>Computer Science</td>
+                            <td>English</td>
+                            <td>History</td>
+                            <td>Biology</td>
+                            <td>Club Activities</td>
+                        </tr>
+                        <tr>
+                            <td>2:00 - 3:00</td>
+                            <td>History</td>
+                            <td>Biology</td>
+                            <td>Computer Science</td>
+                            <td>English</td>
+                            <td>History</td>
+                            <td>Sports</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Course Section -->
+        <section id="course" class="section">
+            <h2 style="margin-bottom: 2rem; color: #5D4037;">
+                <i class="fas fa-book"></i> Course Management
+            </h2>
+            
+            <div style="margin-bottom: 2rem;">
+                <button class="btn btn-primary" onclick="showAddCourseModal()">
+                    <i class="fas fa-plus"></i> Add New Course
+                </button>
+                <button class="btn btn-secondary" onclick="exportToExcel('course')">
+                    <i class="fas fa-file-excel"></i> Export to Excel
+                </button>
+            </div>
+
+            <div class="course-grid" id="courseGrid">
+                <!-- Course cards will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- All Section -->
+        <section id="all" class="section">
+            <h2 style="margin-bottom: 2rem; color: #5D4037;">
+                <i class="fas fa-th"></i> All Information
+            </h2>
+            
+            <div class="all-container">
+                <div class="all-tabs">
+                    <div class="all-tab active" data-tab="students-all">Students</div>
+                    <div class="all-tab" data-tab="attendance-all">Attendance</div>
+                    <div class="all-tab" data-tab="fees-all">Fees</div>
+                    <div class="all-tab" data-tab="admission-all">Admission</div>
+                    <div class="all-tab" data-tab="timetable-all">Timetable</div>
+                    <div class="all-tab" data-tab="course-all">Courses</div>
+                </div>
+                
+                <div class="all-content active" id="students-all">
+                    <div class="fees-header">
+                        <h3 class="fees-title">All Students</h3>
+                        <button class="btn btn-secondary" onclick="exportToExcel('all-students')">
+                            <i class="fas fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                    <table class="fees-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Class</th>
+                                <th>Join Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allStudentsTableBody">
+                            <!-- Student records will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="all-content" id="attendance-all">
+                    <div class="fees-header">
+                        <h3 class="fees-title">All Attendance Records</h3>
+                        <button class="btn btn-secondary" onclick="exportToExcel('all-attendance')">
+                            <i class="fas fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                    <table class="fees-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allAttendanceTableBody">
+                            <!-- Attendance records will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="all-content" id="fees-all">
+                    <div class="fees-header">
+                        <h3 class="fees-title">All Fee Records</h3>
+                        <button class="btn btn-secondary" onclick="exportToExcel('all-fees')">
+                            <i class="fas fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                    <table class="fees-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Fee Type</th>
+                                <th>Amount</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allFeesTableBody">
+                            <!-- Fee records will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="all-content" id="admission-all">
+                    <div class="fees-header">
+                        <h3 class="fees-title">All Admission Applications</h3>
+                        <button class="btn btn-secondary" onclick="exportToExcel('all-admission')">
+                            <i class="fas fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                    <table class="fees-table">
+                        <thead>
+                            <tr>
+                                <th>Application ID</th>
+                                <th>Applicant Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Course</th>
+                                <th>Application Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allAdmissionTableBody">
+                            <!-- Admission records will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="all-content" id="timetable-all">
+                    <div class="fees-header">
+                        <h3 class="fees-title">Complete Timetable</h3>
+                        <button class="btn btn-secondary" onclick="exportToExcel('all-timetable')">
+                            <i class="fas fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                    <table class="timetable-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th>Wednesday</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                                <th>Saturday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>9:00 - 10:00</td>
+                                <td>Mathematics</td>
+                                <td>Physics</td>
+                                <td>Chemistry</td>
+                                <td>Mathematics</td>
+                                <td>Computer Science</td>
+                                <td>English</td>
+                            </tr>
+                            <tr>
+                                <td>10:00 - 11:00</td>
+                                <td>English</td>
+                                <td>Mathematics</td>
+                                <td>Physics</td>
+                                <td>Chemistry</td>
+                                <td>Mathematics</td>
+                                <td>Physical Education</td>
+                            </tr>
+                            <tr>
+                                <td>11:00 - 12:00</td>
+                                <td>Computer Science</td>
+                                <td>English</td>
+                                <td>Mathematics</td>
+                                <td>Physics</td>
+                                <td>Chemistry</td>
+                                <td>Library</td>
+                            </tr>
+                            <tr>
+                                <td>12:00 - 1:00</td>
+                                <td colspan="6" style="text-align: center; font-weight: bold;">Lunch Break</td>
+                            </tr>
+                            <tr>
+                                <td>1:00 - 2:00</td>
+                                <td>Chemistry</td>
+                                <td>Computer Science</td>
+                                <td>English</td>
+                                <td>History</td>
+                                <td>Biology</td>
+                                <td>Club Activities</td>
+                            </tr>
+                            <tr>
+                                <td>2:00 - 3:00</td>
+                                <td>History</td>
+                                <td>Biology</td>
+                                <td>Computer Science</td>
+                                <td>English</td>
+                                <td>History</td>
+                                <td>Sports</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="all-content" id="course-all">
+                    <div class="fees-header">
+                        <h3 class="fees-title">All Courses</h3>
+                        <button class="btn btn-secondary" onclick="exportToExcel('all-courses')">
+                            <i class="fas fa-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                    <table class="fees-table">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Instructor</th>
+                                <th>Duration</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allCoursesTableBody">
+                            <!-- Course records will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Student Modal -->
+    <div class="modal" id="addStudentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Student</h3>
+                <button class="modal-close" onclick="closeModal('addStudentModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="addStudentForm">
+                <div class="form-group">
+                    <label class="form-label" for="newStudentName">Student Name</label>
+                    <input type="text" id="newStudentName" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="newStudentId">Student ID</label>
+                    <input type="text" id="newStudentId" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="newStudentClass">Class</label>
+                    <input type="text" id="newStudentClass" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="newJoinDate">Join Date</label>
+                    <input type="date" id="newJoinDate" class="form-input" required>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addStudentModal')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Student
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Fee Modal -->
+    <div class="modal" id="addFeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Fee Record</h3>
+                <button class="modal-close" onclick="closeModal('addFeeModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="addFeeForm">
+                <div class="form-group">
+                    <label class="form-label" for="feeStudentId">Student ID</label>
+                    <input type="text" id="feeStudentId" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="feeType">Fee Type</label>
+                    <select id="feeType" class="form-input" required>
+                        <option value="">Select Fee Type</option>
+                        <option value="Tuition Fee">Tuition Fee</option>
+                        <option value="Library Fee">Library Fee</option>
+                        <option value="Lab Fee">Lab Fee</option>
+                        <option value="Examination Fee">Examination Fee</option>
+                        <option value="Hostel Fee">Hostel Fee</option>
+                        <option value="Transportation Fee">Transportation Fee</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="feeAmount">Amount</label>
+                    <input type="number" id="feeAmount" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="feeDueDate">Due Date</label>
+                    <input type="date" id="feeDueDate" class="form-input" required>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addFeeModal')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Fee Record
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal" id="addCourseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Course</h3>
+                <button class="modal-close" onclick="closeModal('addCourseModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="addCourseForm">
+                <div class="form-group">
+                    <label class="form-label" for="courseCode">Course Code</label>
+                    <input type="text" id="courseCode" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="courseName">Course Name</label>
+                    <input type="text" id="courseName" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="courseInstructor">Instructor</label>
+                    <input type="text" id="courseInstructor" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="courseDuration">Duration</label>
+                    <input type="text" id="courseDuration" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="courseDescription">Description</label>
+                    <textarea id="courseDescription" class="form-input" rows="4"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addCourseModal')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Course
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        let recentActivities = JSON.parse(localStorage.getItem('recentActivities')) || [];
+        let feeRecords = JSON.parse(localStorage.getItem('feeRecords')) || [];
+        let admissionApplications = JSON.parse(localStorage.getItem('admissionApplications')) || [];
+        let courses = JSON.parse(localStorage.getItem('courses')) || [
+            {
+                code: "CS101",
+                name: "Introduction to Computer Science",
+                instructor: "Dr. John Smith",
+                duration: "12 weeks",
+                description: "Basic concepts of computer science and programming"
+            },
+            {
+                code: "MATH201",
+                name: "Advanced Mathematics",
+                instructor: "Prof. Jane Doe",
+                duration: "16 weeks",
+                description: "Calculus, linear algebra, and differential equations"
+            },
+            {
+                code: "ENG301",
+                name: "Business Communication",
+                instructor: "Dr. Robert Johnson",
+                duration: "8 weeks",
+                description: "Professional writing and presentation skills"
+            }
+        ];
+
+        // Date and Time Functions
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', timeOptions);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Initialize date/time display
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // Set default dates
+        document.getElementById('joinDate').valueAsDate = new Date();
+        document.getElementById('newJoinDate').valueAsDate = new Date();
+        document.getElementById('attendanceDate').valueAsDate = new Date();
+        document.getElementById('applicantDate').valueAsDate = new Date();
+        document.getElementById('feeDueDate').valueAsDate = new Date();
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const section = this.dataset.section;
+                
+                // Update active nav item
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show corresponding section
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+                
+                // Update section content
+                if (section === 'dashboard') {
+                    updateDashboard();
+                } else if (section === 'students') {
+                    displayStudents();
+                } else if (section === 'attendance') {
+                    viewAttendanceByDate();
+                } else if (section === 'fees') {
+                    displayFees();
+                } else if (section === 'admission') {
+                    displayAdmissions();
+                } else if (section === 'course') {
+                    displayCourses();
+                } else if (section === 'all') {
+                    displayAllStudents();
+                    displayAllAttendance();
+                    displayAllFees();
+                    displayAllAdmissions();
+                    displayAllCourses();
+                }
+            });
+        });
+
+        // All Section Tabs
+        document.querySelectorAll('.all-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.all-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show corresponding content
+                document.querySelectorAll('.all-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Initialize Dashboard
+        function updateDashboard() {
+            const totalStudents = students.length;
+            const today = new Date().toDateString();
+            const todayAttendance = attendanceRecords.filter(record => 
+                new Date(record.timestamp).toDateString() === today
+            );
+            
+            const presentToday = todayAttendance.length;
+            const absentToday = totalStudents - presentToday;
+            const attendanceRate = totalStudents > 0 ? Math.round((presentToday / totalStudents) * 100) : 0;
+            
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('presentToday').textContent = presentToday;
+            document.getElementById('absentToday').textContent = absentToday;
+            document.getElementById('attendanceRate').textContent = attendanceRate + '%';
+            
+            displayRecentActivity();
+        }
+
+        // Display Recent Activity
+        function displayRecentActivity() {
+            const activityList = document.getElementById('recentActivity');
+            activityList.innerHTML = '';
+            
+            const recentActivities = [...attendanceRecords]
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 10);
+            
+            if (recentActivities.length === 0) {
+                activityList.innerHTML = '<p style="text-align: center; color: #8D6E63;">No recent activity</p>';
+                return;
+            }
+            
+            recentActivities.forEach(activity => {
+                const student = students.find(s => s.id === activity.studentId);
+                if (!student) return;
+                
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="student-info">
+                        <div class="student-avatar">${student.name.charAt(0)}</div>
+                        <div>
+                            <div style="font-weight: bold;">${student.name}</div>
+                            <div style="color: #8D6E63; font-size: 0.9rem;">${student.id}</div>
+                        </div>
+                    </div>
+                    <div class="activity-time">
+                        <div>${new Date(activity.timestamp).toLocaleTimeString()}</div>
+                        <div class="activity-date">${formatDate(activity.timestamp)}</div>
+                    </div>
+                `;
+                activityList.appendChild(activityItem);
+            });
+        }
+
+        // Display Students
+        function displayStudents() {
+            const studentGrid = document.getElementById('studentGrid');
+            studentGrid.innerHTML = '';
+            
+            if (students.length === 0) {
+                studentGrid.innerHTML = '<p style="text-align: center; color: #8D6E63; grid-column: 1/-1;">No students registered yet</p>';
+                return;
+            }
+            
+            students.forEach(student => {
+                const today = new Date().toDateString();
+                const isPresent = attendanceRecords.some(record => 
+                    record.studentId === student.id && 
+                    new Date(record.timestamp).toDateString() === today
+                );
+                
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                studentCard.innerHTML = `
+                    <div class="student-card-header">
+                        <div class="student-card-avatar">${student.name.charAt(0)}</div>
+                        <span class="student-status ${isPresent ? 'status-present' : 'status-absent'}">
+                            ${isPresent ? 'Present' : 'Absent'}
+                        </span>
+                    </div>
+                    <div class="student-details">
+                        <div class="student-name">${student.name}</div>
+                        <div class="student-id">ID: ${student.id}</div>
+                        <div class="student-id">Class: ${student.class}</div>
+                        <div class="student-join-date">Joined: ${formatDate(student.joinDate)}</div>
+                    </div>
+                    <div class="student-actions">
+                        <button class="btn btn-secondary" onclick="editStudent('${student.id}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-secondary" onclick="deleteStudent('${student.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                studentGrid.appendChild(studentCard);
+            });
+        }
+
+        // Display All Students
+        function displayAllStudents() {
+            const allStudentsTableBody = document.getElementById('allStudentsTableBody');
+            allStudentsTableBody.innerHTML = '';
+            
+            if (students.length === 0) {
+                allStudentsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No students registered yet</td></tr>';
+                return;
+            }
+            
+            students.forEach(student => {
+                const today = new Date().toDateString();
+                const isPresent = attendanceRecords.some(record => 
+                    record.studentId === student.id && 
+                    new Date(record.timestamp).toDateString() === today
+                );
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.class}</td>
+                    <td>${formatDate(student.joinDate)}</td>
+                    <td><span class="student-status ${isPresent ? 'status-present' : 'status-absent'}">${isPresent ? 'Present' : 'Absent'}</span></td>
+                `;
+                allStudentsTableBody.appendChild(row);
+            });
+        }
+
+        // Display All Attendance
+        function displayAllAttendance() {
+            const allAttendanceTableBody = document.getElementById('allAttendanceTableBody');
+            allAttendanceTableBody.innerHTML = '';
+            
+            if (attendanceRecords.length === 0) {
+                allAttendanceTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No attendance records yet</td></tr>';
+                return;
+            }
+            
+            attendanceRecords.forEach(record => {
+                const student = students.find(s => s.id === record.studentId);
+                if (!student) return;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.studentId}</td>
+                    <td>${student.name}</td>
+                    <td>${formatDate(record.timestamp)}</td>
+                    <td>${new Date(record.timestamp).toLocaleTimeString()}</td>
+                `;
+                allAttendanceTableBody.appendChild(row);
+            });
+        }
+
+        // Display Fees
+        function displayFees() {
+            const feesTableBody = document.getElementById('feesTableBody');
+            feesTableBody.innerHTML = '';
+            
+            if (feeRecords.length === 0) {
+                feesTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No fee records yet</td></tr>';
+                return;
+            }
+            
+            feeRecords.forEach(fee => {
+                const student = students.find(s => s.id === fee.studentId);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${fee.studentId}</td>
+                    <td>${student ? student.name : 'Unknown'}</td>
+                    <td>${fee.type}</td>
+                    <td>$${fee.amount}</td>
+                    <td>${formatDate(fee.dueDate)}</td>
+                    <td><span class="${fee.status === 'Paid' ? 'status-paid' : 'status-unpaid'}">${fee.status}</span></td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="editFee('${fee.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-secondary" onclick="deleteFee('${fee.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                feesTableBody.appendChild(row);
+            });
+        }
+
+        // Display All Fees
+        function displayAllFees() {
+            const allFeesTableBody = document.getElementById('allFeesTableBody');
+            allFeesTableBody.innerHTML = '';
+            
+            if (feeRecords.length === 0) {
+                allFeesTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No fee records yet</td></tr>';
+                return;
+            }
+            
+            feeRecords.forEach(fee => {
+                const student = students.find(s => s.id === fee.studentId);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${fee.studentId}</td>
+                    <td>${student ? student.name : 'Unknown'}</td>
+                    <td>${fee.type}</td>
+                    <td>$${fee.amount}</td>
+                    <td>${formatDate(fee.dueDate)}</td>
+                    <td><span class="${fee.status === 'Paid' ? 'status-paid' : 'status-unpaid'}">${fee.status}</span></td>
+                `;
+                allFeesTableBody.appendChild(row);
+            });
+        }
+
+        // Display Admissions
+        function displayAdmissions() {
+            // This function would display admission applications
+            // Implementation would depend on the specific requirements
+        }
+
+        // Display All Admissions
+        function displayAllAdmissions() {
+            const allAdmissionTableBody = document.getElementById('allAdmissionTableBody');
+            allAdmissionTableBody.innerHTML = '';
+            
+            if (admissionApplications.length === 0) {
+                allAdmissionTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No admission applications yet</td></tr>';
+                return;
+            }
+            
+            admissionApplications.forEach(application => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${application.id}</td>
+                    <td>${application.name}</td>
+                    <td>${application.email}</td>
+                    <td>${application.phone}</td>
+                    <td>${application.course}</td>
+                    <td>${formatDate(application.date)}</td>
+                `;
+                allAdmissionTableBody.appendChild(row);
+            });
+        }
+
+        // Display Courses
+        function displayCourses() {
+            const courseGrid = document.getElementById('courseGrid');
+            courseGrid.innerHTML = '';
+            
+            if (courses.length === 0) {
+                courseGrid.innerHTML = '<p style="text-align: center; color: #8D6E63; grid-column: 1/-1;">No courses available yet</p>';
+                return;
+            }
+            
+            courses.forEach(course => {
+                const courseCard = document.createElement('div');
+                courseCard.className = 'course-card';
+                courseCard.innerHTML = `
+                    <div class="course-header">
+                        <div class="course-title">${course.name}</div>
+                        <div class="course-code">${course.code}</div>
+                    </div>
+                    <div class="course-details">
+                        <div class="course-instructor"><i class="fas fa-user"></i> ${course.instructor}</div>
+                        <div class="course-duration"><i class="fas fa-clock"></i> ${course.duration}</div>
+                        <div class="course-description">${course.description}</div>
+                    </div>
+                    <div class="student-actions">
+                        <button class="btn btn-secondary" onclick="editCourse('${course.code}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-secondary" onclick="deleteCourse('${course.code}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                courseGrid.appendChild(courseCard);
+            });
+        }
+
+        // Display All Courses
+        function displayAllCourses() {
+            const allCoursesTableBody = document.getElementById('allCoursesTableBody');
+            allCoursesTableBody.innerHTML = '';
+            
+            if (courses.length === 0) {
+                allCoursesTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No courses available yet</td></tr>';
+                return;
+            }
+            
+            courses.forEach(course => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${course.code}</td>
+                    <td>${course.name}</td>
+                    <td>${course.instructor}</td>
+                    <td>${course.duration}</td>
+                    <td>${course.description}</td>
+                `;
+                allCoursesTableBody.appendChild(row);
+            });
+        }
+
+        // View Attendance by Date
+        function viewAttendanceByDate() {
+            const selectedDate = document.getElementById('attendanceDate').value;
+            if (!selectedDate) return;
+            
+            const attendanceRecordsDiv = document.getElementById('attendanceRecords');
+            const attendanceList = document.getElementById('attendanceList');
+            attendanceList.innerHTML = '';
+            
+            const selectedDateRecords = attendanceRecords.filter(record => {
+                const recordDate = new Date(record.timestamp).toDateString();
+                const selected = new Date(selectedDate).toDateString();
+                return recordDate === selected;
+            });
+            
+            if (selectedDateRecords.length === 0) {
+                attendanceList.innerHTML = '<p style="text-align: center; color: #8D6E63;">No attendance records for this date</p>';
+            } else {
+                selectedDateRecords.forEach(record => {
+                    const student = students.find(s => s.id === record.studentId);
+                    if (!student) return;
+                    
+                    const attendanceItem = document.createElement('div');
+                    attendanceItem.className = 'attendance-item';
+                    attendanceItem.innerHTML = `
+                        <div class="attendance-details">
+                            <div class="student-avatar">${student.name.charAt(0)}</div>
+                            <div>
+                                <div style="font-weight: bold;">${student.name}</div>
+                                <div style="color: #8D6E63; font-size: 0.9rem;">${student.id} - ${student.class}</div>
+                            </div>
+                        </div>
+                        <div class="attendance-time">
+                            <div class="attendance-time-label">${new Date(record.timestamp).toLocaleTimeString()}</div>
+                            <div class="attendance-date">${formatDate(record.timestamp)}</div>
+                        </div>
+                    `;
+                    attendanceList.appendChild(attendanceItem);
+                });
+            }
+            
+            attendanceRecordsDiv.style.display = 'block';
+        }
+
+        // Fingerprint Registration
+        document.getElementById('fingerprintForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const scanner = document.getElementById('fingerprintScanner');
+            scanner.classList.add('scanning');
+            
+            setTimeout(() => {
+                const studentName = document.getElementById('studentName').value;
+                const studentId = document.getElementById('studentId').value;
+                const studentClass = document.getElementById('studentClass').value;
+                const joinDate = document.getElementById('joinDate').value;
+                
+                // Check if student ID already exists
+                if (students.find(s => s.id === studentId)) {
+                    alert('Student ID already exists!');
+                    scanner.classList.remove('scanning');
+                    return;
+                }
+                
+                // Add student
+                const newStudent = {
+                    id: studentId,
+                    name: studentName,
+                    class: studentClass,
+                    joinDate: joinDate,
+                    fingerprintRegistered: true
+                };
+                
+                students.push(newStudent);
+                localStorage.setItem('students', JSON.stringify(students));
+                
+                // Show success message
+                const successMessage = document.getElementById('successMessage');
+                successMessage.classList.add('show');
+                
+                // Reset form
+                this.reset();
+                document.getElementById('joinDate').valueAsDate = new Date();
+                scanner.classList.remove('scanning');
+                
+                // Hide success message after 3 seconds
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+                
+                // Update dashboard
+                updateDashboard();
+            }, 2000);
+        });
+
+        // Admission Form
+        document.getElementById('admissionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('applicantName').value;
+            const email = document.getElementById('applicantEmail').value;
+            const phone = document.getElementById('applicantPhone').value;
+            const course = document.getElementById('applicantCourse').value;
+            const date = document.getElementById('applicantDate').value;
+            const message = document.getElementById('applicantMessage').value;
+            
+            // Generate unique application ID
+            const applicationId = 'APP' + Date.now().toString().slice(-6);
+            
+            // Add application
+            const newApplication = {
+                id: applicationId,
+                name: name,
+                email: email,
+                phone: phone,
+                course: course,
+                date: date,
+                message: message,
+                status: 'Pending'
+            };
+            
+            admissionApplications.push(newApplication);
+            localStorage.setItem('admissionApplications', JSON.stringify(admissionApplications));
+            
+            // Show success message
+            alert('Application submitted successfully! Your application ID is: ' + applicationId);
+            
+            // Reset form
+            this.reset();
+            document.getElementById('applicantDate').valueAsDate = new Date();
+        });
+
+        // Add Fee Form
+        document.getElementById('addFeeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('feeStudentId').value;
+            const type = document.getElementById('feeType').value;
+            const amount = document.getElementById('feeAmount').value;
+            const dueDate = document.getElementById('feeDueDate').value;
+            
+            // Check if student exists
+            if (!students.find(s => s.id === studentId)) {
+                alert('Student ID not found!');
+                return;
+            }
+            
+            // Generate unique fee ID
+            const feeId = 'FEE' + Date.now().toString().slice(-6);
+            
+            // Add fee record
+            const newFee = {
+                id: feeId,
+                studentId: studentId,
+                type: type,
+                amount: amount,
+                dueDate: dueDate,
+                status: 'Unpaid'
+            };
+            
+            feeRecords.push(newFee);
+            localStorage.setItem('feeRecords', JSON.stringify(feeRecords));
+            
+            // Close modal and reset form
+            closeModal('addFeeModal');
+            this.reset();
+            document.getElementById('feeDueDate').valueAsDate = new Date();
+            
+            // Refresh fee list
+            displayFees();
+        });
+
+        // Add Course Form
+        document.getElementById('addCourseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('courseCode').value;
+            const name = document.getElementById('courseName').value;
+            const instructor = document.getElementById('courseInstructor').value;
+            const duration = document.getElementById('courseDuration').value;
+            const description = document.getElementById('courseDescription').value;
+            
+            // Check if course code already exists
+            if (courses.find(c => c.code === code)) {
+                alert('Course code already exists!');
+                return;
+            }
+            
+            // Add course
+            const newCourse = {
+                code: code,
+                name: name,
+                instructor: instructor,
+                duration: duration,
+                description: description
+            };
+            
+            courses.push(newCourse);
+            localStorage.setItem('courses', JSON.stringify(courses));
+            
+            // Close modal and reset form
+            closeModal('addCourseModal');
+            this.reset();
+            
+            // Refresh course list
+            displayCourses();
+        });
+
+        // Attendance Scanner
+        document.getElementById('attendanceScanner').addEventListener('click', function() {
+            this.classList.add('scanning');
+            
+            setTimeout(() => {
+                if (students.length === 0) {
+                    document.getElementById('attendanceResult').innerHTML = `
+                        <p style="color: #D32F2F;">
+                            <i class="fas fa-exclamation-circle"></i> No students registered
+                        </p>
+                    `;
+                    document.getElementById('attendanceResult').style.display = 'block';
+                    this.classList.remove('scanning');
+                    return;
+                }
+                
+                // Simulate random student check-in
+                const randomStudent = students[Math.floor(Math.random() * students.length)];
+                const today = new Date().toDateString();
+                const alreadyCheckedIn = attendanceRecords.some(record => 
+                    record.studentId === randomStudent.id && 
+                    new Date(record.timestamp).toDateString() === today
+                );
+                
+                if (alreadyCheckedIn) {
+                    document.getElementById('attendanceResult').innerHTML = `
+                        <p style="color: #FF9800;">
+                            <i class="fas fa-exclamation-triangle"></i> ${randomStudent.name} already checked in today
+                        </p>
+                    `;
+                } else {
+                    // Record attendance
+                    attendanceRecords.push({
+                        studentId: randomStudent.id,
+                        timestamp: new Date().toISOString()
+                    });
+                    localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+                    
+                    document.getElementById('attendanceResult').innerHTML = `
+                        <p style="color: #5D4037;">
+                            <i class="fas fa-check-circle"></i> Welcome, ${randomStudent.name}!
+                        </p>
+                    `;
+                    
+                    updateDashboard();
+                    viewAttendanceByDate();
+                }
+                
+                document.getElementById('attendanceResult').style.display = 'block';
+                this.classList.remove('scanning');
+                
+                // Hide result after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('attendanceResult').style.display = 'none';
+                }, 3000);
+            }, 1500);
+        });
+
+        // Modal Functions
+        function showAddStudentModal() {
+            document.getElementById('addStudentModal').classList.add('active');
+        }
+
+        function showAddFeeModal() {
+            document.getElementById('addFeeModal').classList.add('active');
+        }
+
+        function showAddCourseModal() {
+            document.getElementById('addCourseModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Add Student Form
+        document.getElementById('addStudentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('newStudentName').value;
+            const id = document.getElementById('newStudentId').value;
+            const studentClass = document.getElementById('newStudentClass').value;
+            const joinDate = document.getElementById('newJoinDate').value;
+            
+            // Check if student ID already exists
+            if (students.find(s => s.id === id)) {
+                alert('Student ID already exists!');
+                return;
+            }
+            
+            // Add student
+            const newStudent = {
+                id: id,
+                name: name,
+                class: studentClass,
+                joinDate: joinDate,
+                fingerprintRegistered: false
+            };
+            
+            students.push(newStudent);
+            localStorage.setItem('students', JSON.stringify(students));
+            
+            // Close modal and reset form
+            closeModal('addStudentModal');
+            this.reset();
+            document.getElementById('newJoinDate').valueAsDate = new Date();
+            
+            // Refresh student list
+            displayStudents();
+            updateDashboard();
+        });
+
+        // Delete Student
+        function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                students = students.filter(s => s.id !== studentId);
+                localStorage.setItem('students', JSON.stringify(students));
+                
+                // Also remove attendance records
+                attendanceRecords = attendanceRecords.filter(r => r.studentId !== studentId);
+                localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+                
+                displayStudents();
+                updateDashboard();
+            }
+        }
+
+        // Delete Fee
+        function deleteFee(feeId) {
+            if (confirm('Are you sure you want to delete this fee record?')) {
+                feeRecords = feeRecords.filter(f => f.id !== feeId);
+                localStorage.setItem('feeRecords', JSON.stringify(feeRecords));
+                
+                displayFees();
+            }
+        }
+
+        // Delete Course
+        function deleteCourse(courseCode) {
+            if (confirm('Are you sure you want to delete this course?')) {
+                courses = courses.filter(c => c.code !== courseCode);
+                localStorage.setItem('courses', JSON.stringify(courses));
+                
+                displayCourses();
+            }
+        }
+
+        // Edit Student (placeholder function)
+        function editStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                const newName = prompt('Enter new name:', student.name);
+                if (newName && newName.trim()) {
+                    student.name = newName.trim();
+                    localStorage.setItem('students', JSON.stringify(students));
+                    displayStudents();
+                }
+            }
+        }
+
+        // Edit Fee (placeholder function)
+        function editFee(feeId) {
+            const fee = feeRecords.find(f => f.id === feeId);
+            if (fee) {
+                const newStatus = prompt('Enter new status (Paid/Unpaid):', fee.status);
+                if (newStatus && (newStatus.trim() === 'Paid' || newStatus.trim() === 'Unpaid')) {
+                    fee.status = newStatus.trim();
+                    localStorage.setItem('feeRecords', JSON.stringify(feeRecords));
+                    displayFees();
+                }
+            }
+        }
+
+        // Edit Course (placeholder function)
+        function editCourse(courseCode) {
+            const course = courses.find(c => c.code === courseCode);
+            if (course) {
+                const newName = prompt('Enter new course name:', course.name);
+                if (newName && newName.trim()) {
+                    course.name = newName.trim();
+                    localStorage.setItem('courses', JSON.stringify(courses));
+                    displayCourses();
+                }
+            }
+        }
+
+        // Export to Excel Function
+        function exportToExcel(type) {
+            let csvContent = '';
+            let filename = '';
+            
+            switch(type) {
+                case 'students':
+                    filename = 'students.csv';
+                    csvContent = 'ID,Name,Class,Join Date\n';
+                    students.forEach(student => {
+                        csvContent += `${student.id},${student.name},${student.class},${student.joinDate}\n`;
+                    });
+                    break;
+                    
+                case 'attendance':
+                    filename = 'attendance.csv';
+                    csvContent = 'Student ID,Student Name,Date,Time\n';
+                    attendanceRecords.forEach(record => {
+                        const student = students.find(s => s.id === record.studentId);
+                        if (student) {
+                            const date = new Date(record.timestamp);
+                            csvContent += `${record.studentId},${student.name},${date.toLocaleDateString()},${date.toLocaleTimeString()}\n`;
+                        }
+                    });
+                    break;
+                    
+                case 'fees':
+                    filename = 'fees.csv';
+                    csvContent = 'Student ID,Student Name,Fee Type,Amount,Due Date,Status\n';
+                    feeRecords.forEach(fee => {
+                        const student = students.find(s => s.id === fee.studentId);
+                        if (student) {
+                            csvContent += `${fee.studentId},${student.name},${fee.type},${fee.amount},${fee.dueDate},${fee.status}\n`;
+                        }
+                    });
+                    break;
+                    
+                case 'admission':
+                    filename = 'admissions.csv';
+                    csvContent = 'Application ID,Name,Email,Phone,Course,Application Date\n';
+                    admissionApplications.forEach(app => {
+                        csvContent += `${app.id},${app.name},${app.email},${app.phone},${app.course},${app.date}\n`;
+                    });
+                    break;
+                    
+                case 'course':
+                    filename = 'courses.csv';
+                    csvContent = 'Course Code,Course Name,Instructor,Duration,Description\n';
+                    courses.forEach(course => {
+                        csvContent += `${course.code},${course.name},${course.instructor},${course.duration},"${course.description}"\n`;
+                    });
+                    break;
+                    
+                case 'all-students':
+                    filename = 'all_students.csv';
+                    csvContent = 'ID,Name,Class,Join Date,Status\n';
+                    students.forEach(student => {
+                        const today = new Date().toDateString();
+                        const isPresent = attendanceRecords.some(record => 
+                            record.studentId === student.id && 
+                            new Date(record.timestamp).toDateString() === today
+                        );
+                        csvContent += `${student.id},${student.name},${student.class},${student.joinDate},${isPresent ? 'Present' : 'Absent'}\n`;
+                    });
+                    break;
+                    
+                case 'all-attendance':
+                    filename = 'all_attendance.csv';
+                    csvContent = 'Student ID,Student Name,Date,Time\n';
+                    attendanceRecords.forEach(record => {
+                        const student = students.find(s => s.id === record.studentId);
+                        if (student) {
+                            const date = new Date(record.timestamp);
+                            csvContent += `${record.studentId},${student.name},${date.toLocaleDateString()},${date.toLocaleTimeString()}\n`;
+                        }
+                    });
+                    break;
+                    
+                case 'all-fees':
+                    filename = 'all_fees.csv';
+                    csvContent = 'Student ID,Student Name,Fee Type,Amount,Due Date,Status\n';
+                    feeRecords.forEach(fee => {
+                        const student = students.find(s => s.id === fee.studentId);
+                        if (student) {
+                            csvContent += `${fee.studentId},${student.name},${fee.type},${fee.amount},${fee.dueDate},${fee.status}\n`;
+                        }
+                    });
+                    break;
+                    
+                case 'all-admission':
+                    filename = 'all_admissions.csv';
+                    csvContent = 'Application ID,Name,Email,Phone,Course,Application Date\n';
+                    admissionApplications.forEach(app => {
+                        csvContent += `${app.id},${app.name},${app.email},${app.phone},${app.course},${app.date}\n`;
+                    });
+                    break;
+                    
+                case 'all-courses':
+                    filename = 'all_courses.csv';
+                    csvContent = 'Course Code,Course Name,Instructor,Duration,Description\n';
+                    courses.forEach(course => {
+                        csvContent += `${course.code},${course.name},${course.instructor},${course.duration},"${course.description}"\n`;
+                    });
+                    break;
+                    
+                case 'all-timetable':
+                    filename = 'timetable.csv';
+                    csvContent = 'Time,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday\n';
+                    csvContent += '9:00 - 10:00,Mathematics,Physics,Chemistry,Mathematics,Computer Science,English\n';
+                    csvContent += '10:00 - 11:00,English,Mathematics,Physics,Chemistry,Mathematics,Physical Education\n';
+                    csvContent += '11:00 - 12:00,Computer Science,English,Mathematics,Physics,Chemistry,Library\n';
+                    csvContent += '12:00 - 1:00,Lunch Break,Lunch Break,Lunch Break,Lunch Break,Lunch Break,Lunch Break\n';
+                    csvContent += '1:00 - 2:00,Chemistry,Computer Science,English,History,Biology,Club Activities\n';
+                    csvContent += '2:00 - 3:00,History,Biology,Computer Science,English,History,Sports\n';
+                    break;
+            }
+            
+            // Create a blob with the CSV content
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            
+            // Create a link element and trigger a download
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Initialize on page load
+        updateDashboard();
+    </script>
+</body>
+</html>
